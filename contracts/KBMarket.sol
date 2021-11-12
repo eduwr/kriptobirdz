@@ -142,4 +142,65 @@ contract KBMarket is ReentrancyGuard {
       return items;
     }
 
+    // return nfts that the user has purchased
+
+    function fetchMyNFTs() public view returns (MarketToken[] memory) {
+      uint totalItemCount = _tokenIds.current();
+      // a second counter for each individual user
+
+      uint itemCount = 0;
+      uint currentIndex = 0;
+
+      for(uint i = 0; i < totalItemCount; i++) {
+        if(idToMarketToken[i+1].owner == msg.sender) {
+          itemCount += 1;
+        }
+      }
+
+      // second loop to loop through the amount you have purchased with it
+      // check to see if the owner address is equal msg.sender
+
+      MarketToken[] memory items = new MarketToken[](itemCount);
+      for (uint i=0; i<totalItemCount; i++) {
+        if(idToMarketToken[i+1].owner == msg.sender) {
+          uint currentId = idToMarketToken[i + 1].itemId;
+
+          MarketToken storage currentItem = idToMarketToken[currentId];
+          items[currentIndex] = currentItem;
+          currentIndex += 1;
+        }
+      }
+
+      return items;
+    }
+
+  function fetchItemsCreated() public view returns(MarketToken[] memory) {
+    uint totalItemCount = _tokenIds.current();
+    uint itemCount = 0;
+    uint currentIndex = 0;
+
+
+      for(uint i = 0; i < totalItemCount; i++) {
+        if(idToMarketToken[i+1].seller == msg.sender) {
+          itemCount += 1;
+        }
+      }
+
+      // second loop to loop through the amount you have purchased with it
+      // check to see if the owner address is equal msg.sender
+
+      MarketToken[] memory items = new MarketToken[](itemCount);
+      for (uint i=0; i<totalItemCount; i++) {
+        if(idToMarketToken[i+1].seller == msg.sender) {
+          uint currentId = idToMarketToken[i + 1].itemId;
+
+          MarketToken storage currentItem = idToMarketToken[currentId];
+          items[currentIndex] = currentItem;
+          currentIndex += 1;
+        }
+      }
+
+      return items;
+  }
+
 }
